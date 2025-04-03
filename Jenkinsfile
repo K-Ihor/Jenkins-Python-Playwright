@@ -14,19 +14,19 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                // Собираем Docker-образ
+                // Собираем Docker-образ для тестов
                 sh 'docker build -t aqa-tests .'
             }
         }
         stage('Run Tests') {
             steps {
-                // Запускаем контейнер с монтированием папки для Allure-результатов
+                // Запускаем контейнер и монтируем папку для Allure-результатов
                 sh 'docker run --rm -v ${WORKSPACE}/allure-results:/app/allure-results aqa-tests'
             }
         }
         stage('Archive Artifacts') {
             steps {
-                // Сохраняем результаты тестов для последующего анализа
+                // Архивируем результаты тестов для дальнейшего анализа
                 archiveArtifacts artifacts: 'allure-results/**/*', allowEmptyArchive: true
             }
         }
@@ -43,4 +43,3 @@ pipeline {
         }
     }
 }
-
